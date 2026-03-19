@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asterisk* | Frosted</title>
+    <title>Asterisk* | Markdown Editor</title>
     
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://accounts.google.com/gsi/client"></script>
@@ -11,150 +11,100 @@
     
     <style>
         :root {
-            --accent: #58a6ff;
+            --accent: #a8d5ba; /* Soft nature sage */
             --text: #ffffff;
-            --text-dim: #a3a3a3;
-            --glass: rgba(20, 20, 20, 0.6);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --success: #4ade80;
+            --text-dim: #d1d1d1;
+            --glass: rgba(15, 20, 15, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --success: #81c784;
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
+            margin: 0; padding: 0; height: 100vh;
             font-family: 'Inter', -apple-system, sans-serif;
-            /* A deep, minimal abstract background */
-            background: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop') no-repeat center center fixed;
+            /* High-quality Nature Background */
+            background: url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=2560&auto=format&fit=crop') no-repeat center center fixed;
             background-size: cover;
-            display: flex;
-            color: var(--text);
-            overflow: hidden;
+            display: flex; color: var(--text); overflow: hidden;
         }
 
-        /* --- Minimal Sidebar --- */
+        /* --- Sidebar --- */
         #sidebar {
-            width: 240px;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(15px);
+            width: 220px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(12px);
             border-right: 1px solid var(--glass-border);
-            display: flex;
-            flex-direction: column;
+            display: flex; flex-direction: column;
         }
 
-        .sidebar-header {
-            padding: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo { font-weight: 800; letter-spacing: -1px; font-size: 1.4rem; color: var(--accent); }
+        .sidebar-header { padding: 30px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 900; font-size: 1.3rem; color: var(--accent); text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
 
         #note-list { flex: 1; padding: 10px; overflow-y: auto; }
-
         .note-item {
-            padding: 12px 15px;
-            margin-bottom: 8px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-            background: rgba(255, 255, 255, 0.03);
+            padding: 12px; margin-bottom: 8px; border-radius: 10px;
+            cursor: pointer; transition: 0.2s; display: flex;
+            justify-content: space-between; font-size: 14px;
+            background: rgba(255, 255, 255, 0.05);
         }
-
-        .note-item:hover { background: rgba(255, 255, 255, 0.08); }
-        .note-item.active { background: rgba(88, 166, 255, 0.2); border: 1px solid var(--accent); }
+        .note-item:hover { background: rgba(255, 255, 255, 0.1); }
+        .note-item.active { background: rgba(168, 213, 186, 0.2); border: 1px solid var(--accent); }
 
         /* --- Main Content --- */
-        main { flex: 1; display: flex; flex-direction: column; position: relative; padding: 20px; box-sizing: border-box; }
+        main { flex: 1; display: flex; flex-direction: column; padding: 30px; box-sizing: border-box; }
 
         header {
             background: var(--glass);
             backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            padding: 15px 25px;
-            border-radius: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+            padding: 12px 25px; border-radius: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 25px; box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         }
 
-        input#current-filename {
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 18px;
-            font-weight: 600;
-            outline: none;
-            width: 300px;
+        #current-filename {
+            background: transparent; border: none; color: white;
+            font-size: 18px; font-weight: 600; outline: none; width: 50%;
         }
 
-        .controls { display: flex; gap: 15px; align-items: center; }
-
+        .controls { display: flex; gap: 12px; align-items: center; }
         button {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid var(--glass-border);
-            padding: 8px 16px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 13px;
-            backdrop-filter: blur(5px);
-            transition: 0.2s;
+            background: rgba(255, 255, 255, 0.1); color: white;
+            border: 1px solid var(--glass-border); padding: 8px 16px;
+            border-radius: 8px; cursor: pointer; font-size: 12px;
+            backdrop-filter: blur(5px); transition: 0.2s;
         }
-
         button:hover { background: rgba(255, 255, 255, 0.2); }
 
-        /* --- Editor & Preview Panels --- */
-        .workspace {
-            display: flex;
-            flex: 1;
-            gap: 20px;
-            overflow: hidden;
-        }
-
-        #editor, #preview {
-            flex: 1;
+        /* --- Singular Panel Editor --- */
+        .panel-container {
+            flex: 1; position: relative;
             background: var(--glass);
             backdrop-filter: blur(25px);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 40px;
-            overflow-y: auto;
-            color: var(--text);
-            line-height: 1.8;
-            font-size: 16px;
+            border-radius: 20px; display: flex;
+            overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.4);
         }
 
         #editor {
-            font-family: 'JetBrains Mono', 'Fira Code', monospace;
-            resize: none;
-            outline: none;
+            flex: 1; background: transparent; border: none;
+            padding: 40px; color: var(--text); font-size: 17px;
+            line-height: 1.7; outline: none; resize: none;
+            font-family: 'Inter', sans-serif; /* Cleaner than mono for nature theme */
+        }
+
+        /* The hidden/toggleable preview could go here, but for "One Panel" we stick to pure writing */
+        #preview-overlay {
+            display: none; position: absolute; top:0; left:0; right:0; bottom:0;
+            background: var(--glass); padding: 40px; overflow-y: auto; z-index: 5;
         }
 
         #status-bar {
-            position: absolute;
-            bottom: 40px;
-            right: 40px;
-            font-size: 11px;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 6px 16px;
-            border-radius: 30px;
-            color: var(--text-dim);
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            position: absolute; bottom: 30px; right: 30px;
+            font-size: 10px; color: var(--text-dim);
+            letter-spacing: 1.5px; text-transform: uppercase;
         }
 
-        /* Markdown Styling */
-        #preview h1 { margin-top: 0; font-size: 2.2rem; }
-        #preview code { background: rgba(255, 255, 255, 0.1); padding: 3px 6px; border-radius: 6px; font-family: monospace; }
-        #preview pre { background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; border: 1px solid var(--glass-border); overflow-x: auto; }
-        #preview blockquote { border-left: 4px solid var(--accent); padding-left: 20px; font-style: italic; color: var(--text-dim); }
-        
         #fileInput { display: none; }
     </style>
 </head>
@@ -163,7 +113,7 @@
 <aside id="sidebar">
     <div class="sidebar-header">
         <span class="logo">Asterisk*</span>
-        <button onclick="createNewNote()" style="padding: 5px 12px;">+</button>
+        <button onclick="createNewNote()">+</button>
     </div>
     <div id="note-list"></div>
 </aside>
@@ -173,36 +123,38 @@
         <input type="text" id="current-filename" placeholder="Untitled document" spellcheck="false">
         <div class="controls">
             <div id="g_id_signin"></div>
+            <button onclick="togglePreview()" id="preview-toggle">Preview</button>
             <button onclick="exportNote()">Export</button>
             <button onclick="document.getElementById('fileInput').click()">Import</button>
             <input type="file" id="fileInput" accept=".md,.txt">
         </div>
     </header>
 
-    <div class="workspace">
-        <textarea id="editor" spellcheck="false" placeholder="Start your masterpiece..."></textarea>
-        <div id="preview"></div>
+    <div class="panel-container">
+        <textarea id="editor" spellcheck="false" placeholder="Write freely..."></textarea>
+        <div id="preview-overlay"></div>
+        <div id="status-bar">Syncing Ready</div>
     </div>
-
-    <div id="status-bar">All systems go</div>
 </main>
 
 <script>
+    // --- YOUR CLIENT ID BAKED IN ---
     const CLIENT_ID = '542506881392-l9lqh349cd44t2db05dqpcbv58or65u8.apps.googleusercontent.com';
     const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 
     const editor = document.getElementById('editor');
-    const preview = document.getElementById('preview');
+    const preview = document.getElementById('preview-overlay');
     const noteListElement = document.getElementById('note-list');
     const status = document.getElementById('status-bar');
     const filenameInput = document.getElementById('current-filename');
 
-    let notes = JSON.parse(localStorage.getItem('asterisk_frosted_v1')) || [];
-    let activeNoteId = localStorage.getItem('asterisk_frosted_active') || null;
+    let notes = JSON.parse(localStorage.getItem('asterisk_nature_v1')) || [];
+    let activeNoteId = localStorage.getItem('asterisk_nature_active') || null;
     let accessToken = null;
     let tokenClient;
+    let isPreviewMode = false;
 
-    // --- CLOUD LOGIC ---
+    // --- GOOGLE CLOUD ---
     function gapiInit() {
         gapi.load('client', async () => {
             await gapi.client.init({ discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'] });
@@ -214,11 +166,11 @@
             client_id: CLIENT_ID, 
             callback: (resp) => {
                 document.getElementById('g_id_signin').style.display = 'none';
-                updateStatus("Cloud Connected", "var(--success)");
+                updateStatus("Cloud Active", "var(--success)");
                 tokenClient.requestAccessToken({prompt: ''});
             }
         });
-        google.accounts.id.renderButton(document.getElementById("g_id_signin"), { theme: "filled_blue", shape: "pill", size: "medium" });
+        google.accounts.id.renderButton(document.getElementById("g_id_signin"), { theme: "outline", shape: "pill", size: "medium" });
         
         tokenClient = google.accounts.oauth2.initTokenClient({
             client_id: CLIENT_ID, scope: SCOPES,
@@ -228,7 +180,7 @@
 
     async function syncToDrive() {
         if (!accessToken) return;
-        updateStatus("Syncing...", "var(--accent)");
+        updateStatus("Syncing...");
         const metadata = { 'name': filenameInput.value + ".md", 'mimeType': 'text/markdown' };
         const file = new Blob([editor.value], {type: 'text/markdown'});
         const form = new FormData();
@@ -241,13 +193,25 @@
                 headers: new Headers({'Authorization': 'Bearer ' + accessToken}),
                 body: form
             });
-            updateStatus("Cloud Sync Successful", "var(--success)");
-        } catch (e) { updateStatus("Cloud Error", "var(--danger)"); }
+            updateStatus("Saved to Cloud", "var(--success)");
+        } catch (e) { updateStatus("Sync Error", "var(--danger)"); }
     }
 
-    // --- CORE LOGIC ---
+    // --- LOGIC ---
     function updateStatus(msg, color = 'var(--text-dim)') {
         status.innerText = msg; status.style.color = color;
+    }
+
+    function togglePreview() {
+        isPreviewMode = !isPreviewMode;
+        if (isPreviewMode) {
+            preview.innerHTML = marked.parse(editor.value);
+            preview.style.display = 'block';
+            document.getElementById('preview-toggle').innerText = "Edit";
+        } else {
+            preview.style.display = 'none';
+            document.getElementById('preview-toggle').innerText = "Preview";
+        }
     }
 
     function renderList() {
@@ -263,7 +227,7 @@
 
     function createNewNote() {
         const id = 'n' + Date.now();
-        notes.push({ id, name: 'Untitled Note', content: '# New Note' });
+        notes.push({ id, name: 'Natural Thought', content: '# New Note' });
         switchNote(id);
     }
 
@@ -273,28 +237,26 @@
         if (note) {
             editor.value = note.content;
             filenameInput.value = note.name;
-            preview.innerHTML = marked.parse(editor.value);
         }
         renderList();
-        saveAll();
+        save();
     }
 
-    function saveAll() {
-        localStorage.setItem('asterisk_frosted_v1', JSON.stringify(notes));
-        localStorage.setItem('asterisk_frosted_active', activeNoteId);
+    function save() {
+        localStorage.setItem('asterisk_nature_v1', JSON.stringify(notes));
+        localStorage.setItem('asterisk_nature_active', activeNoteId);
     }
 
     editor.addEventListener('input', () => {
-        preview.innerHTML = marked.parse(editor.value);
         const note = notes.find(n => n.id === activeNoteId);
         if (note) {
             note.content = editor.value;
             updateStatus("Typing...");
             clearTimeout(window.saveTimer);
             window.saveTimer = setTimeout(() => {
-                saveAll();
+                save();
                 syncToDrive();
-            }, 1200);
+            }, 1500);
         }
     });
 
@@ -303,7 +265,7 @@
         if (note) {
             note.name = filenameInput.value;
             renderList();
-            saveAll();
+            save();
         }
     });
 
@@ -315,7 +277,7 @@
     }
 
     function deleteNote(id) {
-        if(!confirm("Delete?")) return;
+        if(!confirm("Delete this thought?")) return;
         notes = notes.filter(n => n.id !== id);
         activeNoteId = notes[0]?.id || null;
         init();
